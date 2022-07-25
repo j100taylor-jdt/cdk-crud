@@ -1,16 +1,20 @@
 import { Stack, StackProps } from 'aws-cdk-lib';
 import { Construct } from 'constructs';
+import { Database } from './database';
+import { Microservice } from './microservice';
 // import * as sqs from 'aws-cdk-lib/aws-sqs';
 
 export class CdkCrudStack extends Stack {
   constructor(scope: Construct, id: string, props?: StackProps) {
     super(scope, id, props);
+    
+    const tableName = 'mytable'
 
-    // The code that defines your stack goes here
-
-    // example resource
-    // const queue = new sqs.Queue(this, 'CdkCrudQueue', {
-    //   visibilityTimeout: cdk.Duration.seconds(300)
-    // });
+    const db = new Database(this, tableName+'1', {tableName});
+    
+    new Microservice(this, tableName + 'Microservice', {
+      table: db.table,
+      tableName
+    });
   }
 }
