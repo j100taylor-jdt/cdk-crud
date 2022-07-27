@@ -3,24 +3,24 @@ import { Construct } from 'constructs';
 import { Database } from './database';
 import { Microservice } from './microservice';
 import { ApiGateway } from './gateway';
-// import * as sqs from 'aws-cdk-lib/aws-sqs';
 
 export class CdkCrudStack extends Stack {
+  
   constructor(scope: Construct, id: string, props?: StackProps) {
     super(scope, id, props);
     
-    const tableName = 'mytable'
+    const modelName = 'Person'
 
-    const db = new Database(this, tableName+'1', {tableName});
+    const db = new Database(this, modelName+'Database', {tableName: modelName + 'Table'});
     
-    const microservice = new Microservice(this, tableName + 'Microservice', {
+    const microservice = new Microservice(this, modelName + 'Microservice', {
       table: db.table,
-      tableName
+      modelName
     });
     
     new ApiGateway(this, 'apiGateway', {
       microservice: microservice.crudMicroservice,
-      tableName
+      modelName
     })
   }
 }

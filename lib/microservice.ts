@@ -6,7 +6,7 @@ import { join } from "path";
 
 interface MicroservicesProps {
     table: ITable,
-    tableName: string
+    modelName: string
 }
 
 export class Microservice extends Construct {
@@ -16,8 +16,7 @@ export class Microservice extends Construct {
   constructor(scope: Construct, id: string, props: MicroservicesProps) {
     super(scope, id);
 
-    // product microservices
-    this.crudMicroservice = this.createFunction(props.table, props.tableName);
+    this.crudMicroservice = this.createFunction(props.table, props.modelName + 'Table');
 
   }
 
@@ -30,12 +29,11 @@ export class Microservice extends Construct {
       },
       environment: {
         PRIMARY_KEY: 'id',
-        DYNAMODB_TABLE_NAME: tableName
+        DYNAMODB_TABLE_NAME: table.tableName
       },
       runtime: Runtime.NODEJS_14_X
     }
 
-    // Product microservices lambda function
     const lambdaFunction = new NodejsFunction(this, tableName + 'LambdaFunction', {
       entry: join(__dirname, `/../src/crud/index.ts`),
       ...nodeJsFunctionProps,

@@ -4,7 +4,7 @@ import { Construct } from "constructs";
 
 interface ApiGatewayProps {
     microservice: IFunction,
-    tableName: string
+    modelName: string
 
 }
 
@@ -13,27 +13,27 @@ export class ApiGateway extends Construct {
     constructor(scope: Construct, id: string, props: ApiGatewayProps) {
         super(scope, id);
 
-        this.createApi(props.microservice, props.tableName);
+        this.createApi(props.microservice, props.modelName);
 
     }
 
-    private createApi(microservice: IFunction, tableName: string) {
+    private createApi(microservice: IFunction, modelName: string) {
 
 
-      const apigw = new LambdaRestApi(this, tableName + 'Api', {
-        restApiName: 'Product Service',
+      const apigw = new LambdaRestApi(this, modelName + 'Api', {
+        restApiName: modelName + ' Service',
         handler: microservice,
         proxy: false
       });
   
-      const product = apigw.root.addResource('product');
-      product.addMethod('GET'); // GET /product
-      product.addMethod('POST');  // POST /product
+      const root = apigw.root.addResource(modelName);
+      root.addMethod('GET'); 
+      root.addMethod('POST');  
       
-      const singleProduct = product.addResource('{id}'); // product/{id}
-      singleProduct.addMethod('GET'); // GET /product/{id}
-      singleProduct.addMethod('PUT'); // PUT /product/{id}
-      singleProduct.addMethod('DELETE'); // DELETE /product/{id}
+      const single = root.addResource('{id}'); 
+      single.addMethod('GET'); 
+      single.addMethod('PUT'); 
+      single.addMethod('DELETE'); 
     }
 
 }
