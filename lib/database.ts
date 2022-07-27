@@ -22,7 +22,7 @@ export class Database extends Construct {
     //  DynamoDb Table Creation
     //  PK: id -
     private createTable(tableName: string) : ITable {
-      const table = new Table(this, tableName, {
+      const table = new Table(this, tableName + 'Database', {
         partitionKey: {
           name: 'id',
           type: AttributeType.STRING
